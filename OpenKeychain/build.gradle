@@ -164,7 +164,7 @@ android {
     buildToolsVersion rootProject.ext.buildToolsVersion
 
     defaultConfig {
-        minSdkVersion 15
+        minSdkVersion 23
         targetSdkVersion 25
         versionCode 48000
         versionName "4.8-beta1"
