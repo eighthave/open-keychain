@@ -69,13 +69,14 @@ public class TemporaryFileProvider extends ContentProvider {
     private static final String TABLE_FILES = "files";
     public static final String AUTHORITY = Constants.TEMP_FILE_PROVIDER_AUTHORITY;
     public static final Uri CONTENT_URI = Uri.parse("content://" + AUTHORITY);
-    private static final int DB_VERSION = 3;
+    private static final int DB_VERSION = 4;
 
     interface TemporaryFileColumns {
         String COLUMN_UUID = "id";
         String COLUMN_NAME = "name";
         String COLUMN_TIME = "time";
         String COLUMN_TYPE = "mimetype";
+        String COLUMN_SENSITIVE = "sensitive";
     }
 
     private static final String TEMP_FILES_DIR = "temp";
@@ -96,8 +97,9 @@ public class TemporaryFileProvider extends ContentProvider {
         return context.getContentResolver().insert(CONTENT_URI, contentValues);
     }
 
-    public static Uri createFile(Context context) {
+    public static Uri createSensitiveFile(Context context) {
         ContentValues contentValues = new ContentValues();
+        contentValues.put(TemporaryFileColumns.COLUMN_SENSITIVE, 1);
         return context.getContentResolver().insert(CONTENT_URI, contentValues);
     }
 
@@ -127,6 +129,15 @@ public class TemporaryFileProvider extends ContentProvider {
         );
     }
 
+    public static int cleanUpSensitiveFiles(Context context) {
+        ContentResolver contentResolver = context.getContentResolver();
+        return contentResolver.delete(
+                CONTENT_URI,
+                TemporaryFileColumns.COLUMN_SENSITIVE + ">0",
+                null
+        );
+    }
+
     private class TemporaryStorageDatabase extends SQLiteOpenHelper {
 
         public TemporaryStorageDatabase(Context context) {
@@ -139,7 +150,8 @@ public class TemporaryFileProvider extends ContentProvider {
                     TemporaryFileColumns.COLUMN_UUID + " TEXT PRIMARY KEY, " +
                     TemporaryFileColumns.COLUMN_NAME + " TEXT, " +
                     TemporaryFileColumns.COLUMN_TYPE + " TEXT, " +
-                    TemporaryFileColumns.COLUMN_TIME + " INTEGER" +
+                    TemporaryFileColumns.COLUMN_TIME + " INTEGER," +
+                    TemporaryFileColumns.COLUMN_SENSITIVE + " INTEGER DEFAULT 0" +
                     ");");
         }
 
@@ -157,6 +169,9 @@ public class TemporaryFileProvider extends ContentProvider {
                             ");");
                 case 2:
                     db.execSQL("ALTER TABLE files ADD COLUMN " + TemporaryFileColumns.COLUMN_TYPE + " TEXT");
+                case 3:
+                    db.execSQL("ALTER TABLE files ADD COLUMN " + TemporaryFileColumns.COLUMN_SENSITIVE
+                            + " INTEGER DEFAULT 0");
             }
         }
     }

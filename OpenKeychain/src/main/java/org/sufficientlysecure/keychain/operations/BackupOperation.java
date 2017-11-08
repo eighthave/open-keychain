@@ -47,7 +47,6 @@ import org.sufficientlysecure.keychain.operations.results.PgpSignEncryptResult;
 import org.sufficientlysecure.keychain.pgp.CanonicalizedPublicKeyRing;
 import org.sufficientlysecure.keychain.pgp.CanonicalizedSecretKeyRing;
 import org.sufficientlysecure.keychain.pgp.PgpSignEncryptData;
-import org.sufficientlysecure.keychain.pgp.PgpSignEncryptInputParcel;
 import org.sufficientlysecure.keychain.pgp.PgpSignEncryptOperation;
 import org.sufficientlysecure.keychain.pgp.Progressable;
 import org.sufficientlysecure.keychain.pgp.UncachedKeyRing;
@@ -118,7 +117,7 @@ public class BackupOperation extends BaseOperation<BackupKeyringParcel> {
                     throw new IllegalStateException("Encrypted backup must supply cryptoInput parameter");
                 }
 
-                plainUri = TemporaryFileProvider.createFile(mContext);
+                plainUri = TemporaryFileProvider.createSensitiveFile(mContext);
                 plainOut = mContext.getContentResolver().openOutputStream(plainUri);
             } else {
                 if (backupInput.getOutputUri() == null || outputStream != null) {

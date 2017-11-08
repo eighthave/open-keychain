@@ -103,7 +103,7 @@ public class InputDataOperation extends BaseOperation<InputDataParcel> {
             PgpDecryptVerifyOperation op =
                     new PgpDecryptVerifyOperation(mContext, mKeyRepository, mProgressable);
 
-            currentInputUri = TemporaryFileProvider.createFile(mContext);
+            currentInputUri = TemporaryFileProvider.createSensitiveFile(mContext);
 
             decryptInput = decryptInput.toBuilder()
                     .setInputUri(input.getInputUri())

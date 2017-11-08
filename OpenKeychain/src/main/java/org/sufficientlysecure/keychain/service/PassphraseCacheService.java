@@ -42,6 +42,7 @@ import org.sufficientlysecure.keychain.R;
 import org.sufficientlysecure.keychain.pgp.CanonicalizedSecretKey.SecretKeyType;
 import org.sufficientlysecure.keychain.provider.CachedPublicKeyRing;
 import org.sufficientlysecure.keychain.provider.KeyRepository;
+import org.sufficientlysecure.keychain.provider.TemporaryFileProvider;
 import org.sufficientlysecure.keychain.util.Log;
 import org.sufficientlysecure.keychain.util.Passphrase;
 import org.sufficientlysecure.keychain.util.Preferences;
@@ -492,6 +493,8 @@ public class PassphraseCacheService extends Service {
         } else {
             // stop whole service if no cached passphrases remaining
             Log.d(Constants.TAG, "PassphraseCacheService: No passphrases remaining in memory, stopping service!");
+            // revokeUriPermissions and notify change for all decrypted files in TemporaryFileProvider
+            TemporaryFileProvider.cleanUpSensitiveFiles(getBaseContext());
             stopForeground(true);
             stopSelf();
         }

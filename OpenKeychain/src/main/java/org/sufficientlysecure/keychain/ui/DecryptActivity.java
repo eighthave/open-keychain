@@ -193,7 +193,7 @@ public class DecryptActivity extends BaseActivity {
 
     @Nullable
     public Uri readToTempFile(String text) throws IOException {
-        Uri tempFile = TemporaryFileProvider.createFile(this);
+        Uri tempFile = TemporaryFileProvider.createSensitiveFile(this);
         OutputStream outStream = getContentResolver().openOutputStream(tempFile);
         if (outStream == null) {
             return null;
