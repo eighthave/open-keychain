@@ -1029,6 +1029,7 @@
             android:name=".provider.TemporaryFileProvider"
             android:authorities="${applicationId}.tempstorage"
             android:exported="true"
+            android:grantUriPermissions="true"
             android:writePermission="${applicationId}.WRITE_TEMPORARY_STORAGE" />
 
     </application>
