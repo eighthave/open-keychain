@@ -21,8 +21,10 @@ package org.sufficientlysecure.keychain.provider;
 
 import android.content.ClipDescription;
 import android.content.ContentProvider;
+import android.content.ContentResolver;
 import android.content.ContentValues;
 import android.content.Context;
+import android.content.Intent;
 import android.database.Cursor;
 import android.database.MatrixCursor;
 import android.database.sqlite.SQLiteDatabase;
@@ -30,7 +32,6 @@ import android.database.sqlite.SQLiteOpenHelper;
 import android.net.Uri;
 import android.os.ParcelFileDescriptor;
 import android.provider.MediaStore;
-
 import org.sufficientlysecure.keychain.Constants;
 import org.sufficientlysecure.keychain.util.Log;
 
@@ -103,13 +104,19 @@ public class TemporaryFileProvider extends ContentProvider {
     public static int setName(Context context, Uri uri, String name) {
         ContentValues values = new ContentValues();
         values.put(TemporaryFileColumns.COLUMN_NAME, name);
-        return context.getContentResolver().update(uri, values, null, null);
+        ContentResolver contentResolver = context.getContentResolver();
+        int updatedRowsCount = contentResolver.update(uri, values, null, null);
+        contentResolver.notifyChange(uri, null);
+        return updatedRowsCount;
     }
 
     public static int setMimeType(Context context, Uri uri, String mimetype) {
         ContentValues values = new ContentValues();
         values.put(TemporaryFileColumns.COLUMN_TYPE, mimetype);
-        return context.getContentResolver().update(uri, values, null, null);
+        ContentResolver contentResolver = context.getContentResolver();
+        int updatedRowsCount = contentResolver.update(uri, values, null, null);
+        contentResolver.notifyChange(uri, null);
+        return updatedRowsCount;
     }
 
     public static int cleanUp(Context context) {
@@ -284,8 +291,15 @@ public class TemporaryFileProvider extends ContentProvider {
         Cursor files = db.getReadableDatabase().query(TABLE_FILES, new String[]{TemporaryFileColumns.COLUMN_UUID}, selection,
                 selectionArgs, null, null, null);
         if (files != null) {
+            Context context = getContext();
+            ContentResolver contentResolver = context.getContentResolver();
             while (files.moveToNext()) {
-                getFile(files.getString(0)).delete();
+                String uuid = files.getString(0);
+                Uri fileUri = Uri.withAppendedPath(CONTENT_URI, uuid);
+                context.revokeUriPermission(fileUri,
+                        Intent.FLAG_GRANT_READ_URI_PERMISSION | Intent.FLAG_GRANT_WRITE_URI_PERMISSION);
+                contentResolver.notifyChange(fileUri, null);
+                getFile(uuid).delete();
             }
             files.close();
             return db.getWritableDatabase().delete(TABLE_FILES, selection, selectionArgs);
@@ -304,8 +318,12 @@ public class TemporaryFileProvider extends ContentProvider {
         if (selection != null || selectionArgs != null) {
             throw new UnsupportedOperationException("Update supported only for plain uri!");
         }
-        return db.getWritableDatabase().update(TABLE_FILES, values,
+        int updatedRowsCount = db.getWritableDatabase().update(TABLE_FILES, values,
                 TemporaryFileColumns.COLUMN_UUID + " = ?", new String[]{uri.getLastPathSegment()});
+        if (updatedRowsCount > 0) {
+            getContext().getContentResolver().notifyChange(uri, null);
+        }
+        return updatedRowsCount;
     }
 
     @Override
