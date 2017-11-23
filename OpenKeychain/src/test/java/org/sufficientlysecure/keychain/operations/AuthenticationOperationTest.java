@@ -123,7 +123,7 @@ public class AuthenticationOperationTest {
                     .createAuthenticationParcel(authData.build(), challenge);
 
             CryptoInputParcel inputParcel = CryptoInputParcel.createCryptoInputParcel();
-            inputParcel = inputParcel.withPassphrase(mKeyPhrase);
+            inputParcel = inputParcel.withPassphrase(mKeyPhrase, authSubKeyId);
 
             AuthenticationResult result = op.execute(authData.build(), inputParcel, authenticationParcel);
 
@@ -172,7 +172,7 @@ public class AuthenticationOperationTest {
                     .createAuthenticationParcel(authData.build(), challenge);
 
             CryptoInputParcel inputParcel = CryptoInputParcel.createCryptoInputParcel();
-            inputParcel = inputParcel.withPassphrase(mKeyPhrase);
+            inputParcel = inputParcel.withPassphrase(mKeyPhrase, authSubKeyId);
 
             AuthenticationResult result = op.execute(authData.build(), inputParcel, authenticationParcel);
 
@@ -195,7 +195,7 @@ public class AuthenticationOperationTest {
                     .createAuthenticationParcel(authData.build(), challenge);
 
             CryptoInputParcel inputParcel = CryptoInputParcel.createCryptoInputParcel();
-            inputParcel = inputParcel.withPassphrase(mKeyPhrase);
+            inputParcel = inputParcel.withPassphrase(mKeyPhrase, authSubKeyId);
 
             AuthenticationResult result = op.execute(authData.build(), inputParcel, authenticationParcel);
 
