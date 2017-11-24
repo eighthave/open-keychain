@@ -274,6 +274,13 @@ android {
         }
     }
 
+    applicationVariants.all { variant ->
+        /* set the versionCode to a UNIX timestamp on any debug build */
+        if (variant.buildType.isDebuggable()) {
+            variant.mergedFlavor.versionCode = new Date().getTime() / 1000
+        }
+    }
+
     /*
      * To sign release build, create file gradle.properties in ~/.gradle/ with this content:
      *
