@@ -6,10 +6,20 @@ env:
 
 # force non-container build
 sudo: required
+
+addons:
+  apt:
+    sources:
+      - sourceline: 'ppa:openjdk-r/ppa'
+      - sourceline: 'ppa:fdroid/fdroidserver'
+    packages:
+      - fdroidserver
+      - openjdk-8-jdk
+      - openssh-client
+      - python3-qrcode
+      - rsync
+
 before_install:
-  - sudo add-apt-repository ppa:openjdk-r/ppa -y
-  - sudo apt-get update
-  - sudo apt-get install -y openjdk-8-jdk
   - sudo update-alternatives --auto java
   - sudo update-alternatives --auto javac
   - export JAVA_HOME=/usr/lib/jvm/java-8-openjdk-amd64
@@ -42,3 +52,6 @@ script:
     adb shell input keyevent 82;
     ./gradlew --stacktrace connectedFdroidDebugAndroidTest -i;
     fi
+
+after_success:
+  - fdroid nightly -v
