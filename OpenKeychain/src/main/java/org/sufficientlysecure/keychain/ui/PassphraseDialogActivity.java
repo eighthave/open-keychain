@@ -67,7 +67,6 @@ import org.sufficientlysecure.keychain.service.input.RequiredInputParcel;
 import org.sufficientlysecure.keychain.service.input.RequiredInputParcel.RequiredInputType;
 import org.sufficientlysecure.keychain.ui.dialog.CustomAlertDialogBuilder;
 import org.sufficientlysecure.keychain.ui.util.ThemeChanger;
-import org.sufficientlysecure.keychain.ui.widget.CacheTTLSpinner;
 import org.sufficientlysecure.keychain.util.Log;
 import org.sufficientlysecure.keychain.util.Passphrase;
 import org.sufficientlysecure.keychain.util.Preferences;
@@ -163,7 +162,6 @@ public class PassphraseDialogActivity extends FragmentActivity {
         private RequiredInputParcel mRequiredInput;
 
         private ViewAnimator mLayout;
-        private CacheTTLSpinner mTimeToLiveSpinner;
 
         @NonNull
         @Override
@@ -209,10 +207,6 @@ public class PassphraseDialogActivity extends FragmentActivity {
 
             View vTimeToLiveLayout = mLayout.findViewById(R.id.remember_layout);
             vTimeToLiveLayout.setVisibility(mRequiredInput.mSkipCaching ? View.GONE : View.VISIBLE);
-
-            mTimeToLiveSpinner = (CacheTTLSpinner) mLayout.findViewById(R.id.ttl_spinner);
-            int ttlSeconds = Preferences.getPreferences(getContext()).getCacheTtlSeconds();
-            mTimeToLiveSpinner.setSelectedTimeToLive(ttlSeconds);
 
             alert.setNegativeButton(android.R.string.cancel, new DialogInterface.OnClickListener() {
 
@@ -432,7 +426,7 @@ public class PassphraseDialogActivity extends FragmentActivity {
                     }
 
                     final Passphrase passphrase = new Passphrase(mPassphraseEditText);
-                    final int timeToLiveSeconds = mTimeToLiveSpinner.getSelectedTimeToLive();
+                    final int timeToLiveSeconds = 0;  // hard code to "Remember until screen off"
 
                     Preferences.getPreferences(getContext()).setCacheTtlSeconds(timeToLiveSeconds);
 

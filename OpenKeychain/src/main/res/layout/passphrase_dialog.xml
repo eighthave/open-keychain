@@ -66,12 +66,6 @@
                 android:paddingBottom="1dp"
                 android:textAppearance="@android:style/TextAppearance.Medium" />
 
-            <org.sufficientlysecure.keychain.ui.widget.CacheTTLSpinner
-                android:id="@+id/ttl_spinner"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content">
-            </org.sufficientlysecure.keychain.ui.widget.CacheTTLSpinner>
-
         </LinearLayout>
 
     </LinearLayout>

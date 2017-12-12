@@ -1737,7 +1737,7 @@
     <string name="cache_ttl_one_hour">"for one hour"</string>
     <string name="cache_ttl_one_day">"for one day"</string>
     <string name="cache_ttl_forever">"until cleared"</string>
-    <string name="remember">"Remember"</string>
+    <string name="remember">"Remember until screen off"</string>
     <string name="security_token_error_pgp_app_not_installed">"No PGP app was found on the security token"</string>
     <string name="prompt_fidesmo_pgp_install_title">"Install PGP?"</string>
     <string name="prompt_fidesmo_pgp_install_message">"There was no PGP app available on your Fidesmo device."</string>
